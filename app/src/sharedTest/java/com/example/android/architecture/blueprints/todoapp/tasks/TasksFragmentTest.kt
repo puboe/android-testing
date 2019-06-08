@@ -64,13 +64,19 @@ class TasksFragmentTest {
     @Test
     fun clickAddTaskButton_navigateToAddEditFragment() {
         // GIVEN - On the home screen
-        // TODO
+        val scenario = launchFragmentInContainer<TasksFragment>(Bundle(), R.style.AppTheme)
+        val navController = mock(NavController::class.java)
+        scenario.onFragment {
+            Navigation.setViewNavController(it.view!!, navController)
+        }
 
         // WHEN - Click on the "+" button
-        // TODO
+        onView (withId(R.id.fab_add_task)).perform(click())
 
         // THEN - Verify that we navigate to the add screen
-        // TODO
+        verify(navController).navigate(
+            TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(
+                null, getApplicationContext<Context>().getString(R.string.add_task)))
     }
 
     @Test
@@ -315,11 +321,13 @@ class TasksFragmentTest {
 
         // THEN - Verify that we navigate to the add screen
         verify(navController).navigate(
-          TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(
-            null, getApplicationContext<Context>().getString(R.string.add_task)))
+            TasksFragmentDirections.actionTasksFragmentToAddEditTaskFragment(
+                null, getApplicationContext<Context>().getString(R.string.add_task)
+            )
+        )
     }
 
-    private fun checkboxWithText(text: String) : Matcher<View> {
+    private fun checkboxWithText(text: String): Matcher<View> {
         return allOf(withId(R.id.complete), hasSibling(withText(text)))
     }
 }
